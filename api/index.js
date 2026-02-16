@@ -10,9 +10,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Conexión a MongoDB Atlas
-const mongoose = require('mongoose');
-require('dotenv').config();
 
 // Conexión a Mongo usando la variable de entorno de Vercel
 mongoose.connect(process.env.MONGO_URI)
