@@ -11,9 +11,13 @@ app.use(cors());
 app.use(express.json());
 
 // Conexión a MongoDB Atlas
+const mongoose = require('mongoose');
+require('dotenv').config();
+
+// Conexión a Mongo usando la variable de entorno de Vercel
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("Conectado a MongoDB"))
-  .catch(err => console.error("Error de conexión", err));
+    .then(() => console.log("Conectado a MongoDB Atlas"))
+    .catch((err) => console.error("Error de conexión:", err));
 
 // --- RUTAS SOLICITADAS ---
 
