@@ -1,11 +1,10 @@
 const mongoose = require('mongoose');
-
 const CobradorSchema = new mongoose.Schema({
-    nombre: String,
-    celular: String,
-    usuario: { type: String, unique: true },
-    contrasena: String,
-    rol: { type: String, default: 'cobrador' }
+  nombre: { type: String, required: true },
+  cedula: { type: String, required: true, unique: true },
+  celular: String,
+  direccion: String,
+  usuario: { type: String, required: true },
+  password: { type: String, required: true }
 });
-
 module.exports = mongoose.model('Cobrador', CobradorSchema);
