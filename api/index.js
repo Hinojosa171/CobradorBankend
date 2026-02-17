@@ -12,10 +12,12 @@ app.use(express.json());
 
 
 // Conexión a Mongo usando la variable de entorno de Vercel
-mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log("Conectado a MongoDB Atlas"))
-    .catch((err) => console.error("Error de conexión:", err));
 
+const uri = "mongodb+srv://Pedidos:12121212@cluster0.9pvuv.mongodb.net/CobrosDB?retryWrites=true&w=majority";
+
+mongoose.connect(uri)
+  .then(() => console.log("✅ ¡POR FIN CONECTADO CON USUARIO PEDIDOS!"))
+  .catch(err => console.error("❌ Error de conexión:", err.message));
 // --- RUTAS SOLICITADAS ---
 
 // 1. Crear Cobrador (POST)
@@ -75,3 +77,7 @@ app.get('/api/clientes/:id', async (req, res) => {
 });
 
 module.exports = app;
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
+});
