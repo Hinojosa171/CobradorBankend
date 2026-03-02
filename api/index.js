@@ -52,8 +52,15 @@ if (!MONGO_URI) {
 }
 
 mongoose.connect(MONGO_URI)
-  .then(() => console.log("✅ Conectado a MongoDB Atlas"))
-  .catch(err => console.error("❌ Error de conexión:", err));
+  .then(() => {
+    console.log("✅ Conectado a MongoDB Atlas");
+    console.log(`📍 Base de datos: ${MONGO_URI.split('/').pop().split('?')[0]}`);
+  })
+  .catch(err => {
+    console.error("❌ Error de conexión a MongoDB:", err.message);
+    console.error("📍 URL utilizada:", MONGO_URI);
+    process.exit(1);
+  });
 
 const Cobrador = require('../models/Cobrador');
 const Cliente = require('../models/Cliente');
@@ -241,6 +248,16 @@ app.put('/api/creditos/:id', async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
+});
+
+// MIDDLEWARE DE MANEJO GLOBAL DE ERRORES
+app.use((err, req, res, next) => {
+  console.error('❌ Error no controlado:', err.message);
+  console.error('📍 Stack:', err.stack);
+  res.status(500).json({
+    error: 'Internal Server Error',
+    message: process.env.NODE_ENV === 'development' ? err.message : 'Error en el servidor'
+  });
 });
 
 // RUTA CATCH-ALL PARA EL SPA (React Router)
