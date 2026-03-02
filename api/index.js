@@ -7,17 +7,21 @@ require('dotenv').config();
 const app = express();
 
 // ✅ CONFIGURACIÓN DE CORS PARA PRODUCCIÓN Y DESARROLLO
-const allowedOrigins = [
-  'http://localhost:3000',           // Desarrollo local (servidor sirve frontend)
-  'http://localhost:3001',           // Desarrollo local (frontend separado)
-  'http://127.0.0.1:3000',          // Desarrollo local alternativo
-  process.env.FRONTEND_URL || '',    // Variable de entorno para frontend en Vercel
-];
-
 const corsOptions = {
   origin: function (origin, callback) {
+    const allowedOrigins = [
+      'http://localhost:3000',
+      'http://localhost:3001',
+      'http://127.0.0.1:3000',
+      process.env.FRONTEND_URL,
+    ].filter(Boolean);
+
+    // Permitir cualquier *.vercel.app en producción
+    const isVercelDomain = origin && origin.includes('.vercel.app');
+    
     // Permitir peticiones sin origin (como mobile apps o curl)
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (!origin || allowedOrigins.includes(origin) || isVercelDomain) {
+      console.log(`✅ Origen permitido: ${origin || 'sin origen'}`);
       callback(null, true);
     } else {
       console.warn(`⚠️ Origen bloqueado: ${origin}`);
