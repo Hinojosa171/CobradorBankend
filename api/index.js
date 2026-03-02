@@ -6,19 +6,39 @@ require('dotenv').config();
 
 const app = express();
 
-// CONFIGURACIÓN DE CORS - Acepta cualquier origen
-app.use(cors({
-  origin: '*', // Permite cualquier origen (dirección IP o localhost)
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: false
-}));
+// ✅ CONFIGURACIÓN DE CORS PARA PRODUCCIÓN Y DESARROLLO
+const allowedOrigins = [
+  'http://localhost:3000',           // Desarrollo local (servidor sirve frontend)
+  'http://localhost:3001',           // Desarrollo local (frontend separado)
+  'http://127.0.0.1:3000',          // Desarrollo local alternativo
+  process.env.FRONTEND_URL || '',    // Variable de entorno para frontend en Vercel
+];
 
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Permitir peticiones sin origin (como mobile apps o curl)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.warn(`⚠️ Origen bloqueado: ${origin}`);
+      callback(new Error('CORS no permitido'));
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
-// SERVIR ARCHIVOS ESTÁTICOS DEL FRONTEND
+// SERVIR ARCHIVOS ESTÁTICOS DEL FRONTEND (solo en desarrollo local)
 const frontendBuildPath = path.join(__dirname, '../../frontend-movil/build');
-app.use(express.static(frontendBuildPath));
-console.log(`📁 Sirviendo archivos estáticos desde: ${frontendBuildPath}`);
+if (process.env.NODE_ENV === 'development') {
+  app.use(express.static(frontendBuildPath));
+  console.log(`📁 Sirviendo archivos estáticos desde: ${frontendBuildPath}`);
+}
 
 const MONGO_URI = process.env.MONGO_URI;
 
