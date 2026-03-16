@@ -1,18 +1,15 @@
 const mongoose = require('mongoose');
 
-const OficinaSchema = new mongoose.Schema({
+const GerenteSchema = new mongoose.Schema({
   nombre: { type: String, required: true },
   cedula: { type: String, required: true, unique: true },
   celular: String,
   direccion: String,
   usuario: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  rol: { type: String, default: 'oficina' },
-  gerenteID: { type: mongoose.Schema.Types.ObjectId, ref: 'Gerente', required: true },
-  barrios: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Barrio' }],
-  cobradores: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Cobrador' }],
   activo: { type: Boolean, default: true },
+  rol: { type: String, default: 'gerente' },
   fecha_creacion: { type: Date, default: Date.now }
 });
 
-module.exports = mongoose.model('Oficina', OficinaSchema);
+module.exports = mongoose.model('Gerente', GerenteSchema);

@@ -66,7 +66,21 @@ const Cobrador = require('../models/Cobrador');
 const Cliente = require('../models/Cliente');
 const Credito = require('../models/Credito');
 const Oficina = require('../models/Oficina');
+const Gerente = require('../models/Gerente');
+const Barrio = require('../models/Barrio');
 const { crearCredito } = require('../controllers/creditoController');
+const { 
+  crearGerente,
+  loginGerente,
+  obtenerGerente,
+  crearBarrio,
+  obtenerBarrios,
+  crearOficina,
+  obtenerOficinasGerente,
+  asignarBarriosOficina,
+  crearCobradorOficina,
+  estadisticasGerente
+} = require('../controllers/gerenteController');
 
 // CÓDIGO PROTEGIDO PARA REGISTRO DE OFICINA
 const CODIGO_OFICINA = '123456789';
@@ -104,6 +118,44 @@ app.get('/api/oficinas', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+// ============================================
+// RUTAS DEL GERENTE
+// ============================================
+
+// CREAR GERENTE
+app.post('/api/gerentes', crearGerente);
+
+// LOGIN GERENTE
+app.post('/api/gerentes/login', loginGerente);
+
+// OBTENER DATOS DEL GERENTE
+app.get('/api/gerentes/:id', obtenerGerente);
+
+// CREAR BARRIO
+app.post('/api/barrios', crearBarrio);
+
+// OBTENER TODOS LOS BARRIOS
+app.get('/api/barrios', obtenerBarrios);
+
+// CREAR OFICINA DESDE GERENTE
+app.post('/api/gerentes/oficinas/crear', crearOficina);
+
+// OBTENER OFICINAS DEL GERENTE
+app.get('/api/gerentes/:gerenteID/oficinas', obtenerOficinasGerente);
+
+// ASIGNAR BARRIOS A UNA OFICINA
+app.post('/api/oficinas/asignar-barrios', asignarBarriosOficina);
+
+// CREAR COBRADOR EN UNA OFICINA
+app.post('/api/oficinas/cobradores/crear', crearCobradorOficina);
+
+// OBTENER ESTADÍSTICAS DEL GERENTE
+app.get('/api/gerentes/:gerenteID/estadisticas', estadisticasGerente);
+
+// ============================================
+// FIN RUTAS DEL GERENTE
+// ============================================
 
 // RUTA PARA CREAR UN USUARIO DE PRUEBA
 app.post('/api/crear-usuario-prueba', async (req, res) => {
