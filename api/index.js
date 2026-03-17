@@ -119,6 +119,30 @@ app.get('/api/oficinas', async (req, res) => {
   }
 });
 
+// LOGIN DE OFICINA - Devuelve datos limpios sin relaciones
+app.post('/api/oficinas/login', async (req, res) => {
+  try {
+    const { usuario, password } = req.body;
+    const oficina = await Oficina.findOne({ usuario, password });
+    
+    if (!oficina) {
+      return res.status(401).json({ error: 'Usuario o contraseña incorrectos' });
+    }
+
+    res.json({
+      _id: oficina._id,
+      nombre: oficina.nombre,
+      usuario: oficina.usuario,
+      cedula: oficina.cedula,
+      celular: oficina.celular,
+      direccion: oficina.direccion,
+      rol: 'oficina'
+    });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
 // ============================================
 // RUTAS FILTRADAS POR OFICINA
 // ============================================
@@ -127,11 +151,8 @@ app.get('/api/oficinas', async (req, res) => {
 app.get('/api/oficinas/:oficinaId/cobradores', async (req, res) => {
   try {
     const { oficinaId } = req.params;
-    const oficina = await Oficina.findById(oficinaId).populate('cobradores');
-    if (!oficina) {
-      return res.status(404).json({ error: 'Oficina no encontrada' });
-    }
-    res.json(oficina.cobradores);
+    const cobradores = await Cobrador.find({ oficinaID: oficinaId });
+    res.json(cobradores);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
