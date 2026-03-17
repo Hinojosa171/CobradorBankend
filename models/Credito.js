@@ -7,7 +7,8 @@ const CreditoSchema = new mongoose.Schema({
   fecha_vencimiento: Date,
   fecha_pago: Date,
   clienteID: { type: mongoose.Schema.Types.ObjectId, ref: 'Cliente', required: true },
-  cobradorID: { type: mongoose.Schema.Types.ObjectId, ref: 'Cobrador' }
+  cobradorID: { type: mongoose.Schema.Types.ObjectId, ref: 'Cobrador' },
+  oficinaID: { type: mongoose.Schema.Types.ObjectId, ref: 'Oficina' }
 });
 
 // Lógica del 30% antes de guardar

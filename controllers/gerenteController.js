@@ -216,7 +216,8 @@ exports.crearCobradorOficina = async (req, res) => {
       celular,
       direccion,
       usuario,
-      password
+      password,
+      oficinaID: oficiaID
     });
 
     await cobrador.save();

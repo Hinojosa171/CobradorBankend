@@ -6,6 +6,7 @@ const ClienteSchema = new mongoose.Schema({
   email: String,
   direccion: String,
   cobradorID: { type: mongoose.Schema.Types.ObjectId, ref: 'Cobrador' },
+  oficinaID: { type: mongoose.Schema.Types.ObjectId, ref: 'Oficina' },
   fecha_creacion: { type: Date, default: Date.now }
 });
 module.exports = mongoose.model('Cliente', ClienteSchema);

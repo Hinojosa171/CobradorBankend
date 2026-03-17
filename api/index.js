@@ -120,6 +120,48 @@ app.get('/api/oficinas', async (req, res) => {
 });
 
 // ============================================
+// RUTAS FILTRADAS POR OFICINA
+// ============================================
+
+// OBTENER COBRADORES DE UNA OFICINA
+app.get('/api/oficinas/:oficinaId/cobradores', async (req, res) => {
+  try {
+    const { oficinaId } = req.params;
+    const oficina = await Oficina.findById(oficinaId).populate('cobradores');
+    if (!oficina) {
+      return res.status(404).json({ error: 'Oficina no encontrada' });
+    }
+    res.json(oficina.cobradores);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// OBTENER CLIENTES DE UNA OFICINA
+app.get('/api/oficinas/:oficinaId/clientes', async (req, res) => {
+  try {
+    const { oficinaId } = req.params;
+    const clientes = await Cliente.find({ oficinaID: oficinaId });
+    res.json(clientes);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// OBTENER CRÉDITOS DE UNA OFICINA
+app.get('/api/oficinas/:oficinaId/creditos', async (req, res) => {
+  try {
+    const { oficinaId } = req.params;
+    const creditos = await Credito.find({ oficinaID: oficinaId })
+      .populate('clienteID', 'nombre cedula telefono')
+      .populate('cobradorID', 'nombre');
+    res.json(creditos);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// ============================================
 // RUTAS DEL GERENTE
 // ============================================
 

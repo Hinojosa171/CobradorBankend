@@ -6,6 +6,7 @@ const CobradorSchema = new mongoose.Schema({
   direccion: String,
   usuario: { type: String, required: true },
   password: { type: String, required: true },
+  oficinaID: { type: mongoose.Schema.Types.ObjectId, ref: 'Oficina' },
   activo: { type: Boolean, default: true },
   fecha_creacion: { type: Date, default: Date.now }
 });
