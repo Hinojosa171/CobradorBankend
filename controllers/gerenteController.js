@@ -106,6 +106,7 @@ exports.crearBarrio = async (req, res) => {
 // OBTENER TODOS LOS BARRIOS
 exports.obtenerBarrios = async (req, res) => {
   try {
+    // Devolver TODOS los barrios disponibles, sin importar si fueron asignados a otras oficinas
     const barrios = await Barrio.find({ activo: true });
     res.json(barrios);
   } catch (error) {
