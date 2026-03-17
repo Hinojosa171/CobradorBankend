@@ -100,6 +100,36 @@ app.get('/api/cobradores', async (req, res) => {
   }
 });
 
+// LOGIN DE COBRADOR - Devuelve datos limpios con officinaID
+app.post('/api/cobradores/login', async (req, res) => {
+  try {
+    const { usuario, password } = req.body;
+    const cobrador = await Cobrador.findOne({ usuario, password });
+    
+    if (!cobrador) {
+      return res.status(401).json({ error: 'Usuario o contraseña incorrectos' });
+    }
+
+    if (cobrador.activo === false) {
+      return res.status(401).json({ error: 'Esta cuenta ha sido desactivada. Contacta con la oficina.' });
+    }
+
+    res.json({
+      _id: cobrador._id,
+      nombre: cobrador.nombre,
+      usuario: cobrador.usuario,
+      cedula: cobrador.cedula,
+      celular: cobrador.celular,
+      direccion: cobrador.direccion,
+      officinaID: cobrador.officinaID,
+      activo: cobrador.activo,
+      rol: 'cobrador'
+    });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
 app.get('/api/clientes', async (req, res) => {
   try {
     const clientes = await Cliente.find();
